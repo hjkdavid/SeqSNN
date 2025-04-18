@@ -50,7 +50,7 @@ class Spikformer(nn.Module):
 
     def __init__(
         self,
-        dim: int,d
+        dim: int,
         d_ff: Optional[int] = None,
         num_pe_neuron: int = 10,
         pe_type: str = "none",
