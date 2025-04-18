@@ -184,7 +184,7 @@ class BaseRunner(nn.Module):
             batch_size=self.batch_size,
             shuffle=True,
             pin_memory=True,
-            num_workers=8,
+            num_workers=0,
         )
 
         self._init_scheduler(len(loader))
@@ -358,7 +358,7 @@ class BaseRunner(nn.Module):
     def _resume(self):
         if (self.checkpoint_dir / "resume.pth").exists():
             print(f"Resume from {self.checkpoint_dir / 'resume.pth'}", __name__)
-            checkpoint = torch.load(self.checkpoint_dir / "resume.pth")
+            checkpoint = torch.load(self.checkpoint_dir / "resume.pth", weights_only=False)
             self.early_stop.load_state_dict(checkpoint["earlystop"])
             self.load_state_dict(checkpoint["model"])
             self.optimizer.load_state_dict(checkpoint["optim"])
@@ -384,7 +384,7 @@ class BaseRunner(nn.Module):
             batch_size=self.batch_size,
             shuffle=False,
             pin_memory=True,
-            num_workers=8,
+            num_workers=0,
         )
         self.eval()
         eval_loss = AverageMeter()
@@ -434,7 +434,7 @@ class BaseRunner(nn.Module):
             model_path (str): The location where the model parameters are saved.
             strict (bool, optional): [description]. Defaults to True.
         """
-        self.load_state_dict(torch.load(model_path, map_location="cpu"), strict=strict)
+        self.load_state_dict(torch.load(model_path, map_location="cpu", weights_only=False), strict=strict)
 
     def predict(self, dataset: Dataset, name: str):
         """Output the prediction on given data.
@@ -454,7 +454,7 @@ class BaseRunner(nn.Module):
             batch_size=self.batch_size,
             shuffle=False,
             pin_memory=True,
-            num_workers=8,
+            num_workers=0,
         )
         for data, _ in loader:
             if use_cuda():

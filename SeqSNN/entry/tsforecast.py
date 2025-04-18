@@ -8,6 +8,17 @@ from SeqSNN.dataset import DATASETS
 from SeqSNN.runner import RUNNERS
 from SeqSNN.network import NETWORKS
 
+import torch
+from functools import partial
+
+# 이후 모든 torch.load 호출에 weights_only=False 기본 적용
+torch.load = partial(torch.load, weights_only=False)
+
+import inspect
+from SeqSNN.runner.base import BaseRunner
+
+print("BaseRunner loaded from:", inspect.getsourcefile(BaseRunner))
+
 warnings.filterwarnings("ignore")
 
 
